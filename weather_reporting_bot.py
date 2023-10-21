@@ -46,15 +46,13 @@ def handle_response(city):
 
 # Handle Messages
 async def handle_messages(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    message_type: str = update.message.chat.type
-    city: str = update.message.text.strip()
-
-    if message_type == "group":
-        if BOT_USERNAME in city:
-            target_city = city.replace(BOT_USERNAME, "").strip()
-            city = target_city
-
+    text: str = update.message.text
+    if "@Weather_Land_bot" in text:
+        city = text.replace("@Weather_Land_bot", "").strip()
+    else:
+        city = text.strip()
     result = handle_response(city)
+
     await update.message.reply_text(result)
 
 
