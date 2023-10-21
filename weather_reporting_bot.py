@@ -12,23 +12,15 @@ API_KEY: Final = "8438a0ea83aa941f5c4f746f15f95c26"
 
 # Commands
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Hi! I am a meteorological robot")
+    await update.message.reply_text("Hi! I am a meteorological robot.")
 
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("If you add me to a group, I will send a text message about the weather in Tehran every ten minutes. If you want to know about the weather condition of another city, you can send me the name of the city you want in P.V., or mention me in a message in the group and write the name of that city :)")
 
 
-# Handle Messages
-async def handle_messages(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    message_type: str = update.message.chat.type
-    city: str = update.message.text.strip()
-
-    if message_type == "group":
-        if BOT_USERNAME in city:
-            target_city = city.replace(BOT_USERNAME, "").strip()
-            city = target_city
-
+# Handle Response
+def handle_response(city):
     url = BASE_URL + "appid=" + API_KEY + "&q=" + city
     response = requests.get(url).json()
 
@@ -45,9 +37,24 @@ async def handle_messages(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     wind_speed = str(round(response["wind"]["speed"], 1))
 
-    result = city + "\t" + temp_celsius + "°C\t" + description + "\nHumidity: " + humidity + "%" \
-        "\nWind speed: " + wind_speed + "km/h" + \
-        "\nFeels like: " + feels_like_celsius + "°C"
+    result = "🌆 " + city + "\n\n🌡 " + temp_celsius + "°C\n\n" + description + "\n\nHumidity   \t" + humidity + "%" \
+        "\n\nWind           " + wind_speed + "km/h" + \
+        "\n\nRealFeel     " + feels_like_celsius + "°C"
+
+    return result
+
+
+# Handle Messages
+async def handle_messages(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    message_type: str = update.message.chat.type
+    city: str = update.message.text.strip()
+
+    if message_type == "group":
+        if BOT_USERNAME in city:
+            target_city = city.replace(BOT_USERNAME, "").strip()
+            city = target_city
+
+    result = handle_response(city)
     await update.message.reply_text(result)
 
 
