@@ -2,6 +2,7 @@ from typing import Final
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 import requests
+import time
 
 TOKEN: Final = "6759786585:AAExb1hqp9CbJFcIOya090AU_5FjKpn2ivM"
 BOT_USERNAME: Final = "@Weather_Land_Bot"
@@ -17,6 +18,16 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("If you add me to a group, I will send a text message about the weather in Tehran every ten minutes. If you want to know about the weather condition of another city, you can send me the name of the city you want in P.V., or mention me in a message in the group and write the name of that city :)")
+
+
+async def auto_sender_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """When this command is sent, the current weather of a specific city will be sent at fixed time intervals"""
+    city = "Tehran"
+    period = 600  # seconds
+    while True:
+        text = handle_response(city)
+        await update.message.reply_text(text)
+        time.sleep(period)
 
 
 # Handle Response
@@ -68,6 +79,7 @@ if __name__ == "__main__":
     # Commands
     app.add_handler(CommandHandler("start", start_command))
     app.add_handler(CommandHandler("help", help_command))
+    app.add_handler(CommandHandler("auto_sender", auto_sender_command))
 
     # Messages
     app.add_handler(MessageHandler(filters.TEXT, handle_messages))
