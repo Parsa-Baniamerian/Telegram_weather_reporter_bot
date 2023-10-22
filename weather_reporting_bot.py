@@ -3,12 +3,18 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 import requests
 import time
+import configparser
 
-TOKEN: Final = "6759786585:AAExb1hqp9CbJFcIOya090AU_5FjKpn2ivM"
-BOT_USERNAME: Final = "@Weather_Land_Bot"
+# Import Token and keys
+config = configparser.ConfigParser()
+config.sections()
+config.read("./set.conf")
+config.sections()
+TOKEN = config['BOT']['TOKEN']
+BOT_USERNAME = config['BOT']['USERNAME']
 
 BASE_URL: Final = "http://api.openweathermap.org/data/2.5/weather?"
-API_KEY: Final = "8438a0ea83aa941f5c4f746f15f95c26"
+API_KEY = config['API']['API_KEY']
 
 
 # Commands
@@ -23,7 +29,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def auto_sender_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """When this command is sent, the current weather of a specific city will be sent at fixed time intervals"""
     city = "Tehran"
-    period = 600  # seconds
+    period = 5  # seconds
     while True:
         text = handle_response(city)
         await update.message.reply_text(text)
