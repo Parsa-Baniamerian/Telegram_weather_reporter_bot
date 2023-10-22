@@ -2,7 +2,6 @@ from typing import Final
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 import requests
-import time
 import configparser
 
 # Import Token and keys
