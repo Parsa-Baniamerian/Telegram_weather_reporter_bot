@@ -30,23 +30,25 @@ def handle_response(city):
     url = BASE_URL + "appid=" + API_KEY + "&q=" + city
     response = requests.get(url).json()
 
-    def kelvin_to_celsius(kelvin): return kelvin - 273.15
-    temp_kelvin = response["main"]["temp"]
-    temp_celsius = str(int(kelvin_to_celsius(temp_kelvin)))
+    if response["cod"] == 200:
+        def kelvin_to_celsius(kelvin): return kelvin - 273.15
+        temp_kelvin = response["main"]["temp"]
+        temp_celsius = str(int(kelvin_to_celsius(temp_kelvin)))
 
-    feels_like_kelvin = response["main"]["feels_like"]
-    feels_like_celsius = str(int(kelvin_to_celsius(feels_like_kelvin)))
+        feels_like_kelvin = response["main"]["feels_like"]
+        feels_like_celsius = str(int(kelvin_to_celsius(feels_like_kelvin)))
 
-    humidity = str(response["main"]["humidity"])
+        humidity = str(response["main"]["humidity"])
 
-    description = response["weather"][0]["description"]
+        description = response["weather"][0]["description"]
 
-    wind_speed = str(round(response["wind"]["speed"], 1))
+        wind_speed = str(round(response["wind"]["speed"], 1))
 
-    result = "🌆 " + city + "\n\n🌡 " + temp_celsius + "°C\n\n" + description + "\n\nHumidity   \t" + humidity + "%" \
-        "\n\nWind           " + wind_speed + "km/h" + \
-        "\n\nRealFeel     " + feels_like_celsius + "°C"
-
+        result = "🌆 " + city + "\n\n🌡 " + temp_celsius + "°C\n\n" + description + "\n\nHumidity   \t" + humidity + "%" \
+            "\n\nWind           " + wind_speed + "km/h" + \
+            "\n\nRealFeel     " + feels_like_celsius + "°C"
+    else:
+        result = "Sorry, I couldn't fetch weather data for " + city
     return result
 
 
