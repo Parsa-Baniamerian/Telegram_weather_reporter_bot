@@ -23,17 +23,7 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("If you add me to a group, I will send a text message about the weather in Tehran every ten minutes. If you want to know about the weather condition of another city, you can send me the name of the city you want in P.V., or mention me in a message in the group and write the name of that city :)")
-
-
-async def auto_sender_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """When this command is sent, the current weather of a specific city will be sent at fixed time intervals"""
-    city = "Tehran"
-    period = 5  # seconds
-    while True:
-        text = handle_response(city)
-        await update.message.reply_text(text)
-        time.sleep(period)
+    await update.message.reply_text("If you want to know about the weather condition of any city, you can send me the name of the city you want in P.V., or mention me in a message in the group and write the name of that city :)")
 
 
 # Handle Response
@@ -85,7 +75,6 @@ if __name__ == "__main__":
     # Commands
     app.add_handler(CommandHandler("start", start_command))
     app.add_handler(CommandHandler("help", help_command))
-    app.add_handler(CommandHandler("auto_sender", auto_sender_command))
 
     # Messages
     app.add_handler(MessageHandler(filters.TEXT, handle_messages))
